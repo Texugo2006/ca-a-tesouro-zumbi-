@@ -16,6 +16,7 @@ import CodePhase from '../components/Phase/CodePhase';
 import FindObjectPhase from '../components/Phase/FindObjectPhase';
 import DifferencePhase from '../components/Phase/DifferencePhase';
 import FinalRiddlePhase from '../components/Phase/FinalRiddlePhase';
+import BotanicalChoicePhase from '../components/Phase/BotanicalChoicePhase';
 
 export default function GamePhasePage() {
   const {
@@ -56,6 +57,8 @@ export default function GamePhasePage() {
         return <FindObjectPhase phase={currentPhase} onComplete={handlePhaseComplete} />;
       case 'path_choice':
         return <PathChoicePhase phase={currentPhase} onComplete={handlePhaseComplete} />;
+      case 'botanical_choice':
+        return <BotanicalChoicePhase phase={currentPhase} onComplete={handlePhaseComplete} />;
       case 'code':
         return <CodePhase phase={currentPhase} onComplete={handlePhaseComplete} />;
       case 'symbol_puzzle':

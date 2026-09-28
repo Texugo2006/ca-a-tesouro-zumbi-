@@ -250,15 +250,48 @@ export const phasesData = {
       id: 2,
       phaseNumber: 2,
       mapId: "forest",
-      type: "memory",
-      title: "As Runas Botânicas",
-      subtitle: "Encontre os pares das plantas místicas",
-      description: "Memorize e revele os 4 pares de flores sagradas para despertar a fonte mágica.",
-      pairs: [
-        { id: "lotus", name: "Lótus Estelar", icon: "🪷" },
-        { id: "mushroom", name: "Cogumelo Astral", icon: "🍄" },
-        { id: "herb", name: "Trevo de Quatro Folhas", icon: "🍀" },
-        { id: "flower", name: "Orquídea Solar", icon: "🌸" }
+      type: "botanical_choice",
+      title: "O Julgamento da Flora Sagrada",
+      subtitle: "Escolha a flor correta para purificar o altar",
+      description: "Diante do altar da Mãe Árvore, decifre o enigma das plantas e escolha qual flor sagrada deve ser ofertada para despertar a fonte mágica:",
+      riddle: "«Quatro relíquias brotam no altar: uma flutua nas névoas noturnas, outra adormece na penumbra dos troncos, uma queima com o fogo do sol e a última carrega o sopro da fortuna em suas quatro pontas verdes. Apenas o símbolo da bênção eterna despertará a fonte.»",
+      cards: [
+        {
+          id: "lotus",
+          name: "Lótus Estelar",
+          icon: "🪷",
+          subtitle: "Flor das Águas da Meia-Noite",
+          desc: "Bioluminescente e delicada, floresce sob o luar. Suas raízes são venenosas se colhidas de dia.",
+          isCorrect: false,
+          failMessage: "A Lótus Estelar emitiu névoas sonolentas! Suas raízes rejeitam a luz da fonte sagrada."
+        },
+        {
+          id: "mushroom",
+          name: "Cogumelo Astral",
+          icon: "🍄",
+          subtitle: "Fungo das Cavernas Nebulosas",
+          desc: "Esporos fluorescentes roxos que atraem espíritos errantes e causam ilusões ópticas.",
+          isCorrect: false,
+          failMessage: "Os esporos do Cogumelo Astral causaram alucinações e confundiram os aventureiros!"
+        },
+        {
+          id: "herb",
+          name: "Trevo de Quatro Folhas",
+          icon: "🍀",
+          subtitle: "Amuleto da Fortuna Élfica",
+          desc: "Raríssimo vegetal abençoado pelos espíritos antigos. Carrega a virtude da sorte e pureza total.",
+          isCorrect: true,
+          successMessage: "A energia pura do Trevo Dourado purificou o altar e despertou as águas sagradas!"
+        },
+        {
+          id: "flower",
+          name: "Orquídea Solar",
+          icon: "🌻",
+          subtitle: "Pétala do Calor Ardente",
+          desc: "Irradia calor como uma pequena chama. Se colocada na água fria da fonte, murcha instantaneamente.",
+          isCorrect: false,
+          failMessage: "O calor excessivo da Orquídea Solar ferveu a água e fechou os selos da fonte!"
+        }
       ],
       clue: {
         id: "clue_f2",
@@ -269,11 +302,11 @@ export const phasesData = {
         description: "A insígnia floral gravada na casca da Mãe Árvore."
       },
       hints: [
-        { level: 1, cost: 0, text: "Vire duas cartas por vez com calma para lembrar a posição." },
-        { level: 2, cost: 20, text: "Concentre-se nos cantos superiores primeiro." },
-        { level: 3, cost: 40, text: "Revele todas as 4 combinações para obter a pista." }
+        { level: 1, cost: 0, text: "Leia o enigma: procure a relíquia associada à sorte e que possui quatro pontas." },
+        { level: 2, cost: 20, text: "A Lótus e o Cogumelo produzem névoas e esporos; a Orquídea queima com calor excessivo." },
+        { level: 3, cost: 40, text: "A flor sagrada correta é o Trevo de Quatro Folhas (🍀)." }
       ],
-      reward: 130
+      reward: 140
     },
     {
       id: 3,
