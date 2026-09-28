@@ -1,0 +1,222 @@
+export const characters = [
+  {
+    id: "kael",
+    name: "Kael",
+    type: "Espadachim",
+    title: "Lâmina da Aurora",
+    color: "#C63C3C",
+    accentColor: "#F4C542",
+    description: "Um espadachim veloz em busca dos segredos do pai desaparecido nos mares distantes.",
+    ability: "Corte Relâmpago",
+    abilityDesc: "Desfere um corte fulminante que rasga névoas e revela caminhos ocultos.",
+    quote: "Minha lâmina nunca erra o rumo do verdadeiro tesouro!",
+    stats: { agilidade: 9, sabedoria: 6, coragem: 10 },
+    defaultCustomization: {
+      hairColor: "#2C1810",
+      outfitColor: "#8B0000",
+      aura: "flame",
+      auraColor: "#C63C3C",
+      accessory: "scarf",
+      hat: "none",
+      weapon: "sword"
+    }
+  },
+  {
+    id: "shadow",
+    name: "Shadow",
+    type: "Ninja",
+    title: "Sombra Carmesim",
+    color: "#9B59B6",
+    accentColor: "#E74C3C",
+    description: "Mestre da furtividade treinado nos clãs das montanhas nevoentas.",
+    ability: "Passo das Sombras",
+    abilityDesc: "Dissolve-se em fumaça para escapar de armadilhas mortais e alcançar locais inacessíveis.",
+    quote: "O que os olhos não veem, o coração desvenda.",
+    stats: { agilidade: 10, sabedoria: 8, coragem: 7 },
+    defaultCustomization: {
+      hairColor: "#0D0D1A",
+      outfitColor: "#1A0030",
+      aura: "shadow",
+      auraColor: "#9B59B6",
+      accessory: "mask",
+      hat: "bandana",
+      weapon: "shurikens"
+    }
+  },
+  {
+    id: "lyra",
+    name: "Lyra",
+    type: "Maga",
+    title: "Guardiã Astral",
+    color: "#6B2FAA",
+    accentColor: "#6DD5FA",
+    description: "Feiticeira mística capaz de decifrar as escrituras estelares mais antigas do mundo.",
+    ability: "Círculo Arcano",
+    abilityDesc: "Cria constelações de energia arcana que iluminam segredos e decifram códigos.",
+    quote: "As estrelas conhecem todos os mapas do universo.",
+    stats: { agilidade: 6, sabedoria: 10, coragem: 8 },
+    defaultCustomization: {
+      hairColor: "#6B2FAA",
+      outfitColor: "#4A0080",
+      aura: "arcane",
+      auraColor: "#6DD5FA",
+      accessory: "pendant",
+      hat: "witch_hat",
+      weapon: "staff"
+    }
+  },
+  {
+    id: "redd",
+    name: "Redd",
+    type: "Pirata",
+    title: "O Corsário Lendário",
+    color: "#D35400",
+    accentColor: "#F4C542",
+    description: "Navegador destemido que desafiou os sete mares e os monstros das fossas abissais.",
+    ability: "Comando do Capitão",
+    abilityDesc: "Usa sua bússola dourada para farejar riquezas enterradas sob rochas e areia.",
+    quote: "O vento que sopra é o chamado da fortuna!",
+    stats: { agilidade: 7, sabedoria: 8, coragem: 10 },
+    defaultCustomization: {
+      hairColor: "#6B3A2A",
+      outfitColor: "#8B4513",
+      aura: "gold",
+      auraColor: "#F4C542",
+      accessory: "eyepatch",
+      hat: "tricorn",
+      weapon: "cutlass"
+    }
+  },
+  {
+    id: "hana",
+    name: "Hana",
+    type: "Samurai",
+    title: "Flor de Aço",
+    color: "#E74C3C",
+    accentColor: "#FFB6C1",
+    description: "Guerreira nobre que honra o juramento de proteger o equilíbrio dos quatro reinos.",
+    ability: "Dança das Pétalas",
+    abilityDesc: "Um golpe concentrado que dispersa qualquer ilusão ou miragem do ambiente.",
+    quote: "A honra de um guerreiro vale mais do que montanhas de ouro.",
+    stats: { agilidade: 8, sabedoria: 9, coragem: 9 },
+    defaultCustomization: {
+      hairColor: "#1A0A00",
+      outfitColor: "#641E16",
+      aura: "sakura",
+      auraColor: "#FF69B4",
+      accessory: "kanzashi",
+      hat: "none",
+      weapon: "katana"
+    }
+  },
+  {
+    id: "zira",
+    name: "Zira",
+    type: "Arqueira",
+    title: "Olho de Falcão",
+    color: "#27AE60",
+    accentColor: "#F4C542",
+    description: "Protetora da Floresta Sagrada com pontaria infalível até mesmo na escuridão.",
+    ability: "Flecha Esmeralda",
+    abilityDesc: "Dispara uma flecha etérea de luz que guia o grupo pelas trilhas perdidas.",
+    quote: "A brisa revela onde os passos desavisados tropeçam.",
+    stats: { agilidade: 9, sabedoria: 8, coragem: 8 },
+    defaultCustomization: {
+      hairColor: "#1A5E35",
+      outfitColor: "#1E8449",
+      aura: "nature",
+      auraColor: "#2ECC71",
+      accessory: "leaf_headband",
+      hat: "hood",
+      weapon: "bow"
+    }
+  },
+  {
+    id: "nova",
+    name: "Nova",
+    type: "Aventureira",
+    title: "Coração Desbravador",
+    color: "#F39C12",
+    accentColor: "#3498DB",
+    description: "Curiosa e destemida exploradora armada com mapas raros e ferramentas de navegação.",
+    ability: "Visão da Exploradora",
+    abilityDesc: "Examina com precisão telescópica pistas minúsculas invisíveis a olho nu.",
+    quote: "Cada ruína tem uma história esperando para ser contada!",
+    stats: { agilidade: 8, sabedoria: 9, coragem: 9 },
+    defaultCustomization: {
+      hairColor: "#5D4037",
+      outfitColor: "#784212",
+      aura: "discovery",
+      auraColor: "#F4C542",
+      accessory: "goggles",
+      hat: "fedora",
+      weapon: "compass"
+    }
+  },
+  {
+    id: "brak",
+    name: "Brak",
+    type: "Guerreiro Elemental",
+    title: "Martelo de Titã",
+    color: "#2980B9",
+    accentColor: "#E67E22",
+    description: "Guardião da terra com força incomparável e lealdade inabalável aos companheiros.",
+    ability: "Fúria Sísmica",
+    abilityDesc: "Golpeia o chão quebrando rochedos gigantescos e revelando cavernas seladas.",
+    quote: "Nenhuma muralha fica de pé contra o peso da determinação!",
+    stats: { agilidade: 5, sabedoria: 7, coragem: 10 },
+    defaultCustomization: {
+      hairColor: "#1A0A00",
+      outfitColor: "#1A5276",
+      aura: "earth",
+      auraColor: "#E67E22",
+      accessory: "pauldrons",
+      hat: "helmet",
+      weapon: "hammer"
+    }
+  },
+  {
+    id: "teo",
+    name: "Teo",
+    type: "Erudito",
+    title: "Guardião dos Tomos",
+    color: "#8E44AD",
+    accentColor: "#F1C40F",
+    description: "Arqueólogo genial capaz de traduzir dialetos mortos e mecanismos mecânicos antigos.",
+    ability: "Análise Ancestral",
+    abilityDesc: "Desmonta a complexidade de charadas decifrando os componentes em instantes.",
+    quote: "A mente afiada é a chave mestra de qualquer fechadura.",
+    stats: { agilidade: 6, sabedoria: 10, coragem: 7 },
+    defaultCustomization: {
+      hairColor: "#5D4037",
+      outfitColor: "#4A235A",
+      aura: "wisdom",
+      auraColor: "#9B59B6",
+      accessory: "glasses",
+      hat: "scholar_cap",
+      weapon: "tome"
+    }
+  },
+  {
+    id: "vesper",
+    name: "Vesper",
+    type: "Ladina",
+    title: "Vento da Meia-Noite",
+    color: "#16A085",
+    accentColor: "#F39C12",
+    description: "Especialista em cofres lendários e relíquias guardadas sob os segredos mais perigosos.",
+    ability: "Mãos Rápidas",
+    abilityDesc: "Destrava mecanismos complexos e desarma engrenagens antes que girem.",
+    quote: "Segredos guardados a sete chaves são os meus favoritos.",
+    stats: { agilidade: 10, sabedoria: 8, coragem: 8 },
+    defaultCustomization: {
+      hairColor: "#1A0A00",
+      outfitColor: "#0E6655",
+      aura: "stealth",
+      auraColor: "#1ABC9C",
+      accessory: "mask",
+      hat: "none",
+      weapon: "daggers"
+    }
+  }
+];
