@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
 import { maps } from '../../data/maps';
-import { Volume2, VolumeX, Music, HelpCircle, Pause, Map, Compass, Sparkles, Key } from 'lucide-react';
+import { Volume2, VolumeX, Music, HelpCircle, Pause, Map, Compass, Sparkles, Key, Heart, Coins, Star, ScrollText, Lightbulb, X, ShieldCheck } from 'lucide-react';
+import TacticalIcon from '../Common/TacticalIcon';
+import InventoryModal from '../Inventory/InventoryModal';
+import NetworkStatus from '../Common/NetworkStatus';
 
 export default function GameHUD({ showMapReturn = true, currentPhaseNumber = null }) {
   const {
     lives,
+    infiniteLives,
+    toggleInfiniteLives,
     coins,
     score,
     selectedMap,
@@ -46,7 +51,7 @@ export default function GameHUD({ showMapReturn = true, currentPhaseNumber = nul
           )}
 
           <div className="bg-slate-950/70 border border-amber-500/30 rounded-xl px-3 py-1.5 backdrop-blur-md flex items-center gap-2">
-            <span className="text-lg">{currentMapData.visuals.bannerIcon}</span>
+            <TacticalIcon icon={currentMapData.visuals.bannerIcon} className="w-5 h-5 text-amber-400" />
             <div className="flex flex-col">
               <span className="text-xs sm:text-sm font-cinzel font-bold text-amber-300 truncate max-w-[120px] sm:max-w-none">
                 {currentMapData.name}
@@ -62,22 +67,33 @@ export default function GameHUD({ showMapReturn = true, currentPhaseNumber = nul
 
         {/* Center: Hearts & Coins */}
         <div className="flex items-center gap-2 sm:gap-4 bg-slate-950/80 border border-amber-500/40 rounded-2xl px-3 py-1.5 backdrop-blur-md shadow-xl">
-          {/* Vidas / Hearts */}
-          <div className="flex items-center gap-1" title="Vidas Restantes">
-            {[1, 2, 3].map((heartIndex) => {
-              const isAlive = heartIndex <= lives;
-              return (
-                <motion.span
-                  key={heartIndex}
-                  animate={isAlive ? { scale: [1, 1.1, 1] } : { scale: 0.85, filter: 'grayscale(100%)' }}
-                  transition={isAlive ? { duration: 1.8, repeat: Infinity, delay: heartIndex * 0.2 } : {}}
-                  className={`text-lg sm:text-2xl transition-all ${isAlive ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.7)]' : 'opacity-40'}`}
-                >
-                  ❤️
-                </motion.span>
-              );
-            })}
-          </div>
+          {/* Vidas / Hearts (ou Modo Infinito) */}
+          <button
+            onClick={toggleInfiniteLives}
+            className="flex items-center gap-1.5 cursor-pointer p-0.5 rounded-lg hover:bg-white/5 transition-colors"
+            title={infiniteLives ? "Modo Imortal Ativo (Clique para vidas normais)" : "Clique para ativar Modo Vidas Infinitas"}
+          >
+            {infiniteLives ? (
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-400 text-emerald-300 font-mono text-xs font-black shadow-[0_0_12px_rgba(16,185,129,0.5)]">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>VIDA ∞</span>
+              </span>
+            ) : (
+              [1, 2, 3].map((heartIndex) => {
+                const isAlive = heartIndex <= lives;
+                return (
+                  <motion.span
+                    key={heartIndex}
+                    animate={isAlive ? { scale: [1, 1.15, 1] } : { scale: 0.85, filter: 'grayscale(100%)' }}
+                    transition={isAlive ? { duration: 1.8, repeat: Infinity, delay: heartIndex * 0.2 } : {}}
+                    className={`inline-flex items-center justify-center transition-all ${isAlive ? 'drop-shadow-[0_0_8px_rgba(239,68,68,0.7)]' : 'opacity-30'}`}
+                  >
+                    <Heart className={`w-5 h-5 sm:w-6 sm:h-6 ${isAlive ? 'fill-red-500 text-red-500' : 'text-zinc-600'}`} />
+                  </motion.span>
+                );
+              })
+            )}
+          </button>
 
           <div className="w-[1px] h-6 bg-amber-500/30" />
 
@@ -86,9 +102,9 @@ export default function GameHUD({ showMapReturn = true, currentPhaseNumber = nul
             <motion.span
               animate={{ rotate: [0, 15, -15, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
-              className="text-lg sm:text-xl drop-shadow-[0_0_8px_rgba(244,197,66,0.6)]"
+              className="inline-flex items-center justify-center text-amber-400 drop-shadow-[0_0_8px_rgba(244,197,66,0.6)]"
             >
-              🪙
+              <Coins className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-amber-400" />
             </motion.span>
             <span className="text-amber-300 font-bold font-cinzel text-sm sm:text-base">
               {coins}
@@ -99,13 +115,14 @@ export default function GameHUD({ showMapReturn = true, currentPhaseNumber = nul
 
           {/* Pontuação */}
           <div className="hidden md:flex items-center gap-1 text-xs text-amber-200/80">
-            <span>⭐</span>
+            <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
             <span className="font-semibold">{score} pts</span>
           </div>
         </div>
 
-        {/* Right: Controls (Clues, Sound, Music, Pause, Help) */}
+        {/* Right: Controls (Network, Clues, Sound, Music, Pause, Help) */}
         <div className="flex items-center gap-1 sm:gap-2">
+          <NetworkStatus className="hidden sm:inline-flex" />
           {/* Botão de Pistas Coletadas */}
           <motion.button
             whileHover={{ scale: 1.08 }}
@@ -167,61 +184,11 @@ export default function GameHUD({ showMapReturn = true, currentPhaseNumber = nul
         </div>
       </header>
 
-      {/* Clues Drawer Modal */}
-      <AnimatePresence>
-        {showCluesDrawer && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 top-16 max-w-xl mx-auto z-40 bg-slate-950/95 border-2 border-amber-500/60 rounded-2xl p-4 shadow-2xl backdrop-blur-xl"
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-amber-500/30">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">📜</span>
-                <h3 className="font-cinzel font-bold text-amber-300 text-base">
-                  Pistas Coletadas ({clues.length}/5)
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowCluesDrawer(false)}
-                className="text-amber-400/70 hover:text-amber-200 text-sm font-bold px-2 py-1"
-              >
-                ✕ Fechar
-              </button>
-            </div>
-
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1">
-              {clues.length === 0 ? (
-                <div className="col-span-full py-6 text-center text-amber-200/60 text-xs">
-                  Nenhuma pista encontrada ainda. Supere as fases deste mapa para desbloquear coordenadas, símbolos e senhas!
-                </div>
-              ) : (
-                clues.map((clue, idx) => (
-                  <div
-                    key={idx}
-                    className="p-2.5 bg-amber-950/40 border border-amber-500/30 rounded-xl flex items-center gap-3"
-                  >
-                    <span className="text-2xl">{clue.icon || '🔍'}</span>
-                    <div>
-                      <div className="text-[10px] uppercase font-bold text-amber-400">
-                        {clue.title || clue.label || 'Pista Secreta'}
-                      </div>
-                      <div className="font-cinzel font-black text-amber-200 text-sm">
-                        {clue.value}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <p className="mt-3 text-[11px] text-amber-300/60 text-center italic">
-              💡 Você precisará de todas essas informações para desvendar o enigma final na Fase 7!
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Clues Inventory Modal with Drag & Drop */}
+      <InventoryModal
+        isOpen={showCluesDrawer}
+        onClose={() => setShowCluesDrawer(false)}
+      />
     </>
   );
 }

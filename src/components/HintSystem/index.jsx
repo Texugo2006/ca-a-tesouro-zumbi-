@@ -1,112 +1,151 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
-import { Lightbulb, Lock, Check } from 'lucide-react';
+import { Lock, ChevronDown, ChevronUp, Check, X } from 'lucide-react';
 
-export default function HintSystem({ phase, mapId }) {
+export default function HintSystem({ phase, mapId, onTriggerHint }) {
   const { hintsUsed, unlockHint, coins } = useGameStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const phaseNumber = phase.phaseNumber || 1;
   const key = `${mapId}_${phaseNumber}`;
-  const unlockedLevel = hintsUsed[key] || 0;
+  const usedCount = hintsUsed[key] || 0;
   const hints = phase.hints || [];
+  const maxHints = hints.length || 3;
 
-  const handleUnlockHint = (hintObj) => {
-    if (hintObj.level <= unlockedLevel) return;
-    const success = unlockHint(mapId, phaseNumber, hintObj.level, hintObj.cost);
-    if (!success) {
-      alert("Moedas insuficientes para desbloquear esta dica!");
+  // Player starts with 3/3 (or maxHints/maxHints) available!
+  const availableHints = Math.max(0, maxHints - usedCount);
+
+  // Next hint to unlock
+  const nextLevel = usedCount + 1;
+  const canUnlockMore = availableHints > 0 && nextLevel <= maxHints;
+  const nextHint = hints.find(h => h.level === nextLevel) || hints[usedCount];
+  const canAffordNext = nextHint ? (nextHint.cost === 0 || coins >= nextHint.cost) : false;
+
+  const handleRevealNext = () => {
+    if (!canUnlockMore) {
+      setIsOpen(true);
+      return;
+    }
+    const cost = nextHint?.cost || 0;
+    const success = unlockHint(mapId, phaseNumber, nextLevel, cost);
+    if (success) {
+      if (onTriggerHint) {
+        onTriggerHint(nextLevel);
+      }
+    } else {
+      setIsOpen(true);
     }
   };
 
   return (
     <div className="relative">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 rounded-xl text-amber-300 font-cinzel text-xs font-bold flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-all shadow-md"
-      >
-        <Lightbulb className="w-4 h-4 text-amber-400" />
-        <span>Dicas ({unlockedLevel}/{hints.length})</span>
-      </motion.button>
+      {/* ── Toggle button ── */}
+      <div className="flex items-center gap-1">
+        {/* Quick reveal button */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={handleRevealNext}
+          title={canUnlockMore ? (nextHint?.cost === 0 ? 'Revelar dica (Grátis)' : `Revelar dica (${nextHint?.cost} moedas)`) : 'Ver dicas'}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg cursor-pointer transition-all text-xs font-bold font-cinzel shadow-sm"
+          style={{
+            background: availableHints > 0 ? '#1a2e14' : '#141a0e',
+            border: availableHints > 0 ? '1px solid #4a7c2a' : '1px solid #2a3a1e',
+            color: availableHints > 0 ? '#b8d870' : '#7a7060',
+          }}
+        >
+          <img src="/assets/images/ui/hint.svg" alt="Dica" className="w-4 h-4 object-contain inline-block drop-shadow-sm" />
+          <span>DICAS ({availableHints}/{maxHints})</span>
+        </motion.button>
 
+        {/* Expand/view button */}
+        {usedCount > 0 && (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsOpen(o => !o)}
+            className="flex items-center justify-center p-1.5 rounded-lg cursor-pointer transition-all text-xs"
+            style={{
+              background: '#0a0f08',
+              border: '1px solid #2a3a1e',
+              color: '#4a7c2a',
+            }}
+            title="Ver histórico de dicas"
+          >
+            {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </motion.button>
+        )}
+      </div>
+
+      {/* ── Expanded hints panel ── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 10 }}
-            className="absolute right-0 bottom-full mb-2 w-72 sm:w-80 bg-slate-950 border-2 border-amber-500/70 rounded-2xl p-4 shadow-2xl z-40 text-amber-100 backdrop-blur-xl"
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 bottom-full mb-2 w-72 rounded-xl shadow-2xl z-50"
+            style={{
+              background: '#0d1108',
+              border: '1px solid #2a3a1e',
+            }}
           >
-            <div className="flex items-center justify-between pb-2 border-b border-amber-500/30 mb-3">
-              <span className="font-cinzel font-bold text-xs text-amber-400 flex items-center gap-1.5">
-                <Lightbulb className="w-4 h-4" /> Dicas da Fase
+            {/* Header */}
+            <div
+              className="flex items-center justify-between px-3 py-2.5 border-b"
+              style={{ borderColor: '#1a2414' }}
+            >
+              <span className="font-cinzel font-bold text-xs flex items-center gap-1.5" style={{ color: '#7ab648' }}>
+                <img src="/assets/images/ui/hint.svg" alt="Dica" className="w-4 h-4 object-contain inline-block" />
+                Dicas da Missão
               </span>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-amber-400/60 hover:text-amber-200 text-xs font-bold"
+                className="text-xs cursor-pointer text-[#7a7060] hover:text-[#d4c9a8]"
               >
-                ✕
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="space-y-2.5">
+            {/* Hints list */}
+            <div className="p-3 space-y-2">
               {hints.map((h) => {
-                const isUnlocked = h.level <= unlockedLevel;
-                const canAfford = coins >= h.cost;
-
+                const revealed = h.level <= usedCount;
                 return (
                   <div
                     key={h.level}
-                    className={`p-2.5 rounded-xl border text-xs transition-all ${
-                      isUnlocked
-                        ? 'bg-amber-950/40 border-amber-500/40 text-amber-200'
-                        : 'bg-slate-900/60 border-slate-700 text-slate-400'
-                    }`}
+                    className="rounded-lg p-2.5 text-xs"
+                    style={{
+                      background: revealed ? '#141a0e' : '#0a0f08',
+                      border: `1px solid ${revealed ? '#2a4a1e' : '#1a1e14'}`,
+                      color: revealed ? '#d4c9a8' : '#2a2a26',
+                    }}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold flex items-center gap-1">
-                        {isUnlocked ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        ) : (
-                          <Lock className="w-3.5 h-3.5 text-amber-400/60" />
-                        )}
-                        Dica {h.level} {h.cost === 0 ? '(Grátis)' : `(${h.cost} 🪙)`}
+                    <div className="flex items-center gap-1.5 mb-1 font-bold">
+                      {revealed
+                        ? <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        : <Lock className="w-3 h-3" style={{ color: '#2a3a1e' }} />
+                      }
+                      <span style={{ color: revealed ? '#4a7c2a' : '#2a3a1e' }}>
+                        Dica {h.level}
+                        {!revealed && h.cost > 0 && ` · ${h.cost} moedas`}
+                        {!revealed && h.cost === 0 && ' · grátis'}
                       </span>
-
-                      {!isUnlocked && (
-                        <button
-                          onClick={() => handleUnlockHint(h)}
-                          disabled={!canAfford}
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold font-cinzel transition-all cursor-pointer ${
-                            canAfford
-                              ? 'bg-amber-500 text-slate-950 hover:bg-amber-400'
-                              : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                          }`}
-                        >
-                          {h.cost === 0 ? 'Revelar' : 'Comprar'}
-                        </button>
-                      )}
                     </div>
-
-                    <div className="text-[11px] leading-snug">
-                      {isUnlocked ? (
-                        <span className="text-amber-100 font-medium">{h.text}</span>
-                      ) : (
-                        <span className="italic text-slate-500">
-                          {h.level === 1
-                            ? 'Dica introdutória com orientação geral.'
-                            : h.level === 2
-                            ? 'Pista direta para eliminar possibilidades.'
-                            : 'Passo a passo revelador da solução.'}
-                        </span>
-                      )}
-                    </div>
+                    {revealed ? (
+                      <p className="leading-snug" style={{ color: '#a89878' }}>{h.text}</p>
+                    ) : (
+                      <p className="italic" style={{ color: '#1e2618' }}>Clique em "DICA {h.level}" para revelar</p>
+                    )}
                   </div>
                 );
               })}
+
+              {hints.length === 0 && (
+                <p className="text-xs text-center py-2" style={{ color: '#2a3a1e' }}>
+                  Sem dicas para esta missão.
+                </p>
+              )}
             </div>
           </motion.div>
         )}

@@ -4,7 +4,7 @@ import { characters } from '../../data/characters';
 import { useGameStore } from '../../store/useGameStore';
 import { sound } from '../../services/soundEngine';
 import Character from '../Character';
-import { Check, Sparkles, Wand2, ArrowLeft, Shield, Palette } from 'lucide-react';
+import { Check, Sparkles, Wand2, ArrowLeft, Shield, Palette, Crown } from 'lucide-react';
 
 export default function CharacterEditor({ onConfirm, onBack }) {
   const { selectedCharacter, customization, setCustomization, customCharacters, setCharacterAnimation } = useGameStore();
@@ -233,7 +233,8 @@ export default function CharacterEditor({ onConfirm, onBack }) {
           {/* 4. Hat / Headpiece */}
           <div>
             <label className="text-xs font-cinzel font-bold text-amber-300 flex items-center gap-1.5 mb-2.5">
-              <span>👑</span> Chapéu / Acessório
+              <Crown className="w-3.5 h-3.5 text-amber-400" />
+              <span>Chapéu / Acessório</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {hatOptions.map((ho) => {

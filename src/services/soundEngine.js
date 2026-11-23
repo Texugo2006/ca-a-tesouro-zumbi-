@@ -56,6 +56,183 @@ class SoundEngine {
     osc.stop(this.ctx.currentTime + 0.06);
   }
 
+  // Gunshot sound: punchy low kick + noisy burst
+  playGunshot() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+
+    // Low pitch kick punch
+    const kick = this.ctx.createOscillator();
+    const kickGain = this.ctx.createGain();
+    kick.type = 'triangle';
+    kick.frequency.setValueAtTime(180, now);
+    kick.frequency.exponentialRampToValueAtTime(30, now + 0.18);
+    kickGain.gain.setValueAtTime(0.5, now);
+    kickGain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    kick.connect(kickGain);
+    kickGain.connect(this.ctx.destination);
+    kick.start(now);
+    kick.stop(now + 0.2);
+
+    // Crackle noise burst
+    const bufferSize = this.ctx.sampleRate * 0.15;
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const output = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.03));
+    }
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    const noiseFilter = this.ctx.createBiquadFilter();
+    noiseFilter.type = 'lowpass';
+    noiseFilter.frequency.setValueAtTime(3000, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(400, now + 0.15);
+
+    const noiseGain = this.ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.4, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(this.ctx.destination);
+    noise.start(now);
+  }
+
+  // Zombie groan / growl
+  playZombieGrowl() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const lfo = this.ctx.createOscillator();
+    const lfoGain = this.ctx.createGain();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(95, now);
+    osc.frequency.linearRampToValueAtTime(70, now + 0.4);
+
+    lfo.frequency.setValueAtTime(25, now);
+    lfoGain.gain.setValueAtTime(40, now);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+
+    gain.gain.setValueAtTime(0.01, now);
+    gain.gain.linearRampToValueAtTime(0.28, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    lfo.start(now);
+    osc.stop(now + 0.5);
+    lfo.stop(now + 0.5);
+  }
+
+  // Emergency Quarantine Siren
+  playAlarm() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(650, now);
+    osc.frequency.linearRampToValueAtTime(880, now + 0.2);
+    osc.frequency.linearRampToValueAtTime(650, now + 0.4);
+
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.45);
+  }
+
+  // Gun reload click-clack
+  playReload() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    [0, 0.12].forEach((offset, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(idx === 0 ? 800 : 1200, now + offset);
+      osc.frequency.exponentialRampToValueAtTime(300, now + offset + 0.05);
+
+      gain.gain.setValueAtTime(0.2, now + offset);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + offset + 0.05);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.05);
+    });
+  }
+
+  // Cyber hacking data transmission sound
+  playCyberHacking() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    for (let i = 0; i < 4; i++) {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      const freq = 1200 + Math.random() * 800;
+      osc.frequency.setValueAtTime(freq, now + i * 0.04);
+      osc.frequency.exponentialRampToValueAtTime(400, now + i * 0.04 + 0.035);
+
+      gain.gain.setValueAtTime(0.08, now + i * 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.035);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + i * 0.04);
+      osc.stop(now + i * 0.04 + 0.035);
+    }
+  }
+
+  // Tension heartbeat thumping sound
+  playHeartbeat() {
+    if (!this.soundEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    [0, 0.15].forEach((offset) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(65, now + offset);
+      osc.frequency.exponentialRampToValueAtTime(35, now + offset + 0.1);
+
+      gain.gain.setValueAtTime(0.4, now + offset);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.12);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.12);
+    });
+  }
+
   playCoin() {
     if (!this.soundEnabled) return;
     this.init();

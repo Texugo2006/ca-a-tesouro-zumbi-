@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../../store/useGameStore';
-import { Volume2, VolumeX, Music, RotateCcw, Play, Map, Home, Heart, Key, Sparkles, HelpCircle } from 'lucide-react';
+import { Volume2, VolumeX, Music, RotateCcw, Play, Map, Home, Heart, Key, Sparkles, HelpCircle, ScrollText, Coins, Settings, AlertTriangle, X } from 'lucide-react';
 
 export function HowToPlayModal() {
   const { showHowToPlay, setShowHowToPlay } = useGameStore();
@@ -20,11 +20,11 @@ export function HowToPlayModal() {
           onClick={() => setShowHowToPlay(false)}
           className="absolute top-4 right-4 text-amber-400 hover:text-amber-200 text-lg font-bold w-8 h-8 rounded-full bg-slate-900 border border-amber-500/40 flex items-center justify-center cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-3xl">📜</span>
+          <ScrollText className="w-8 h-8 text-amber-400" />
           <h2 className="text-2xl font-cinzel font-black text-amber-400">
             Manual do Aventureiro
           </h2>
@@ -32,7 +32,7 @@ export function HowToPlayModal() {
 
         <div className="space-y-4 text-sm text-amber-100/90 leading-relaxed">
           <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-2xl flex items-start gap-3">
-            <span className="text-2xl">🗺️</span>
+            <Map className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-bold text-amber-300">O Objetivo</h4>
               <p className="text-xs text-amber-200/80 mt-1">
@@ -42,19 +42,19 @@ export function HowToPlayModal() {
           </div>
 
           <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-2xl flex items-start gap-3">
-            <span className="text-2xl">❤️</span>
+            <Heart className="w-6 h-6 text-red-500 fill-red-500 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-bold text-amber-300">Sistema de Vidas</h4>
               <p className="text-xs text-amber-200/80 mt-1">
-                Você possui 3 vidas por fase. Errar opções, caminhos ou códigos custa 1 vida. Se perder todas, poderá usar 50 moedas para se recuperar ou reiniciar a fase.
+                Você possui vidas por fase. Errar opções, caminhos ou códigos custa 1 vida. Se perder todas, poderá usar moedas para se recuperar ou reiniciar a fase com novas perguntas!
               </p>
             </div>
           </div>
 
           <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-2xl flex items-start gap-3">
-            <span className="text-2xl">🪙</span>
+            <Coins className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-bold text-amber-300">Moedas & Dicas (💡)</h4>
+              <h4 className="font-bold text-amber-300">Moedas & Dicas</h4>
               <p className="text-xs text-amber-200/80 mt-1">
                 Ganhe moedas de ouro completando fases e acertando de primeira! Cada fase oferece até 3 dicas: a primeira é gratuita, e as seguintes custam moedas.
               </p>
@@ -62,7 +62,7 @@ export function HowToPlayModal() {
           </div>
 
           <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-2xl flex items-start gap-3">
-            <span className="text-2xl">🧩</span>
+            <Sparkles className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-bold text-amber-300">Variedade de Mecânicas</h4>
               <p className="text-xs text-amber-200/80 mt-1">
@@ -72,7 +72,7 @@ export function HowToPlayModal() {
           </div>
 
           <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-2xl flex items-start gap-3">
-            <span className="text-2xl">🗝️</span>
+            <Key className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-bold text-amber-300">O Enigma Final (Fase 7)</h4>
               <p className="text-xs text-amber-200/80 mt-1">
@@ -168,11 +168,12 @@ export function SettingsModal() {
           onClick={() => setShowSettings(false)}
           className="absolute top-4 right-4 text-amber-400 hover:text-amber-200 text-lg font-bold w-8 h-8 rounded-full bg-slate-900 border border-amber-500/40 flex items-center justify-center cursor-pointer"
         >
-          ✕
+          <X className="w-4 h-4" />
         </button>
 
         <h3 className="text-xl font-cinzel font-bold text-amber-400 mb-4 flex items-center gap-2">
-          <span>⚙️</span> Configurações
+          <Settings className="w-5 h-5 text-amber-400" />
+          <span>Configurações</span>
         </h3>
 
         <div className="space-y-4 text-sm">
@@ -231,54 +232,55 @@ export function SettingsModal() {
 }
 
 export function GameOverModal() {
-  const { activeScreen, coins, reviveWithCoins, setActiveScreen, currentPhaseIndex } = useGameStore();
+  const { activeScreen, coins, reviveWithCoins, restartAfterGameOver, setActiveScreen, currentPhaseIndex, difficulty } = useGameStore();
 
   if (activeScreen !== 'game_over') return null;
+
+  const maxLives = difficulty === 'easy' ? 5 : difficulty === 'hard' ? 2 : 3;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg">
       <motion.div
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-sm bg-slate-950 border-2 border-red-500/80 rounded-3xl p-6 shadow-2xl text-center"
+        className="w-full max-w-sm bg-[#0a0f0d] border-2 border-red-500/80 rounded-3xl p-6 shadow-2xl text-center"
       >
-        <div className="text-5xl mb-3 animate-bounce">💀</div>
+        <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-2 animate-bounce" />
         <h3 className="text-2xl font-cinzel font-black text-red-400 mb-1">
           Vidas Esgotadas!
         </h3>
-        <p className="text-xs text-amber-200/80 mb-6 leading-relaxed">
-          Os perigos da caverna foram intensos demais desta vez. Não desista, aventureiro!
+        <p className="text-xs text-zinc-300 mb-6 leading-relaxed font-outfit">
+          A horda quase te engoliu! Ao reiniciar, as perguntas e respostas serão alternadas para um novo desafio tático.
         </p>
 
         <div className="space-y-3">
           {coins >= 50 ? (
             <button
               onClick={() => reviveWithCoins(50)}
-              className="w-full py-3 gold-gradient-btn rounded-xl font-cinzel font-bold flex items-center justify-center gap-2 cursor-pointer text-sm"
+              className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl font-mono font-black flex items-center justify-center gap-2 cursor-pointer text-sm shadow-[0_0_20px_rgba(16,185,129,0.4)]"
             >
-              <span>❤️ Recuperar 3 Vidas (50 🪙)</span>
+              <span>Recuperar {maxLives} Vidas (50 Moedas)</span>
             </button>
           ) : (
-            <div className="text-xs text-amber-400/60 italic py-1">
-              Moedas insuficientes para ressuscitar (precisa de 50 🪙).
+            <div className="text-xs text-red-400/80 italic py-1 font-mono">
+              Moedas insuficientes para ressuscitar (necessário 50 moedas).
             </div>
           )}
 
           <button
             onClick={() => {
-              // Revive for free but restart phase
-              useGameStore.setState({ lives: 3, activeScreen: 'game_phase' });
+              restartAfterGameOver();
             }}
-            className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-300 rounded-xl font-cinzel text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            className="w-full py-2.5 bg-zinc-900 hover:bg-emerald-950 border border-emerald-500/60 text-emerald-300 hover:text-emerald-200 rounded-xl font-mono text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-lg"
           >
-            <RotateCcw className="w-4 h-4" /> Tentar Esta Fase Novamente
+            <RotateCcw className="w-4 h-4 text-emerald-400" /> Tentar Novamente (Novas Perguntas/Respostas)
           </button>
 
           <button
             onClick={() => setActiveScreen('map_overview')}
-            className="w-full py-2 bg-slate-900/60 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white rounded-xl font-cinzel text-xs font-semibold cursor-pointer transition-colors"
+            className="w-full py-2 bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white rounded-xl font-mono text-xs font-semibold cursor-pointer transition-colors"
           >
-            Retornar ao Mapa
+            Retornar ao Radar Tático
           </button>
         </div>
       </motion.div>

@@ -4,7 +4,7 @@ import { characters } from '../../data/characters';
 import { useGameStore } from '../../store/useGameStore';
 import Character from '../Character';
 import CharacterCreator from '../CharacterCreator';
-import { Sparkles, Wand2, ArrowRight, Shield, Zap, BookOpen } from 'lucide-react';
+import { Sparkles, Wand2, ArrowRight, Shield, Zap, BookOpen, Check } from 'lucide-react';
 
 export default function CharacterSelector({ onSelect, onCustomize, onProceed }) {
   const { selectedCharacter, setSelectedCharacter, customization, customCharacters } = useGameStore();
@@ -49,8 +49,8 @@ export default function CharacterSelector({ onSelect, onCustomize, onProceed }) 
               }`}
             >
               {isSelected && (
-                <div className="absolute top-2 right-2 text-amber-400 text-xs font-black">
-                  ✓
+                <div className="absolute top-2 right-2 text-amber-400">
+                  <Check className="w-3.5 h-3.5" />
                 </div>
               )}
 

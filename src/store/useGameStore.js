@@ -4,6 +4,33 @@ import { sound } from '../services/soundEngine';
 
 const STORAGE_KEY = 'caca_tesouro_save_v1';
 
+const ZOMBIE_ATTACK_SCENARIOS = [
+  {
+    title: 'Mordida no Flanco!',
+    subtitle: 'Ataque Surpresa na Penumbra',
+    description: 'Um carniçal saltou dos escombros e cravou as garras na blindagem antes de ser repelido!',
+    damage: '-1 VIDA'
+  },
+  {
+    title: 'Emboscada da Horda!',
+    subtitle: 'Cerco de Infectados',
+    description: 'Um grupo de zumbis rastejantes rompeu a barricada e desferiu um ataque agressivo!',
+    damage: '-1 VIDA'
+  },
+  {
+    title: 'Esporos Virulentos!',
+    subtitle: 'Nuvem Tóxica da Quarentena',
+    description: 'Uma carcaça contaminada explodiu no corredor, danificando seu filtro de respiração!',
+    damage: '-1 VIDA'
+  },
+  {
+    title: 'Golpe de Brutamontes!',
+    subtitle: 'Infectado Mutante Pesado',
+    description: 'Um carniçal gigante arremessou escombros de concreto contra o seu flanco!',
+    damage: '-1 VIDA'
+  }
+];
+
 const getInitialState = () => {
   if (typeof window !== 'undefined') {
     try {
@@ -15,6 +42,12 @@ const getInitialState = () => {
           customCharacters: parsed.customCharacters || [],
           activeScreen: 'home',
           lives: 3,
+          infiniteLives: Boolean(parsed.infiniteLives),
+          zombieAttackEvent: null,
+          showPhaseScoreModal: false,
+          lastPhaseScore: null,
+          showLeaderboardModal: false,
+          showGrandPrizeModal: false,
           characterAnimation: 'idle'
         };
       }
@@ -31,14 +64,16 @@ const getInitialState = () => {
     selectedMap: "pirates",
     currentPhaseIndex: 0,
     lives: 3,
+    infiniteLives: false,
+    zombieAttackEvent: null,
     coins: 250,
     score: 0,
     unlockedMaps: ["pirates", "forest", "temple", "frozen"],
     mapProgress: {
-      pirates: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] },
-      forest: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] },
-      temple: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] },
-      frozen: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] }
+      pirates: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      forest: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      temple: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      frozen: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} }
     },
     hintsUsed: {},
     soundEnabled: true,
@@ -47,6 +82,11 @@ const getInitialState = () => {
     characterAnimation: 'idle',
     showHowToPlay: false,
     showSettings: false,
+    showLeaderboardModal: false,
+    showGrandPrizeModal: false,
+    grandPrizeClaimed: false,
+    showPhaseScoreModal: false,
+    lastPhaseScore: null,
     isPaused: false
   };
 };
@@ -67,6 +107,8 @@ export const useGameStore = create((set, get) => ({
         unlockedMaps: state.unlockedMaps,
         mapProgress: state.mapProgress,
         hintsUsed: state.hintsUsed,
+        infiniteLives: state.infiniteLives,
+        grandPrizeClaimed: state.grandPrizeClaimed,
         soundEnabled: state.soundEnabled,
         musicEnabled: state.musicEnabled
       };
@@ -74,6 +116,153 @@ export const useGameStore = create((set, get) => ({
     } catch (e) {
       console.warn("Error saving game state:", e);
     }
+  },
+
+  toggleInfiniteLives: () => {
+    sound.playClick();
+    const next = !get().infiniteLives;
+    set({ infiniteLives: next });
+    get().saveToStorage();
+  },
+
+  closeZombieAttack: () => {
+    set({ zombieAttackEvent: null });
+  },
+
+  loseLife: () => {
+    sound.playError();
+    const { infiniteLives, lives } = get();
+
+    // Escolhe aleatoriamente uma cena dramática de ataque zumbi
+    const randomAttack = ZOMBIE_ATTACK_SCENARIOS[Math.floor(Math.random() * ZOMBIE_ATTACK_SCENARIOS.length)];
+    const attackEvent = {
+      ...randomAttack,
+      damage: infiniteLives ? 'ESCUDO ∞ ABSORVEU O DANO!' : '-1 VIDA PERDIDA'
+    };
+
+    if (infiniteLives) {
+      set({
+        zombieAttackEvent: attackEvent,
+        characterAnimation: 'error'
+      });
+      setTimeout(() => {
+        set({ characterAnimation: 'idle' });
+      }, 900);
+      return;
+    }
+
+    const nextLives = Math.max(0, lives - 1);
+    set({
+      lives: nextLives,
+      zombieAttackEvent: attackEvent,
+      characterAnimation: 'error'
+    });
+
+    setTimeout(() => {
+      if (get().lives > 0) {
+        set({ characterAnimation: 'idle' });
+      } else {
+        set({ activeScreen: 'game_over' });
+      }
+    }, 1500);
+  },
+
+  startNewGame: () => {
+    sound.playClick();
+    const cleanMapProgress = {
+      pirates: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      forest: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      temple: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} },
+      frozen: { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} }
+    };
+    // Limpa localStorage ANTES de setar o estado para garantir reset completo
+    localStorage.removeItem(STORAGE_KEY);
+    set({
+      score: 0,
+      currentPhaseIndex: 0,
+      lives: 3,
+      coins: 250,
+      grandPrizeClaimed: false,
+      hintsUsed: {},
+      mapProgress: cleanMapProgress,
+      activeScreen: 'home'
+    });
+    get().saveToStorage();
+    // Recarrega a página para garantir que o estado do Zustand seja reiniciado do zero
+    setTimeout(() => window.location.reload(), 300);
+  },
+
+  resetZone: (mapId) => {
+    sound.playClick();
+    // Reseta apenas a zona selecionada
+    set(state => ({
+      mapProgress: {
+        ...state.mapProgress,
+        [mapId]: {
+          maxPhaseUnlocked: 1,
+          completed: false,
+          cluesCollected: [],
+          phaseScores: {}
+        }
+      }
+    }));
+    get().saveToStorage();
+    setTimeout(() => window.location.reload(), 300);
+  },
+
+  resetGame: () => {
+    localStorage.removeItem(STORAGE_KEY);
+    const initial = getInitialState();
+    set(initial);
+  },
+
+  openLeaderboardModal: () => {
+    sound.playClick();
+    set({ showLeaderboardModal: true });
+  },
+
+  closeLeaderboardModal: () => {
+    set({ showLeaderboardModal: false });
+  },
+
+  openGrandPrizeModal: () => {
+    sound.playClick();
+    set({ showGrandPrizeModal: true });
+  },
+
+  closeGrandPrizeModal: () => {
+    set({ showGrandPrizeModal: false });
+  },
+
+  claimGrandPrize: () => {
+    sound.playCorrect();
+    set(state => ({
+      score: state.score + 5000,
+      coins: state.coins + 2500,
+      grandPrizeClaimed: true,
+      showGrandPrizeModal: true
+    }));
+    get().saveToStorage();
+  },
+
+  closePhaseScoreModal: () => {
+    const { lastPhaseScore } = get();
+    set({ showPhaseScoreModal: false });
+    if (lastPhaseScore?.isFinal) {
+      set({ activeScreen: 'victory' });
+    } else if (lastPhaseScore) {
+      set({
+        currentPhaseIndex: lastPhaseScore.phaseNumber,
+        activeScreen: 'game_phase'
+      });
+    }
+  },
+
+  returnToMapAfterScore: () => {
+    set({
+      showPhaseScoreModal: false,
+      activeScreen: 'map_overview'
+    });
   },
 
   addCustomCharacter: (char) => {
@@ -115,11 +304,6 @@ export const useGameStore = create((set, get) => ({
   },
 
   setCharacterAnimation: (animType) => {
-    try {
-      // debug: log character animation changes
-      // eslint-disable-next-line no-console
-      console.log('[useGameStore] setCharacterAnimation ->', animType);
-    } catch (e) {}
     set({ characterAnimation: animType });
   },
 
@@ -156,21 +340,6 @@ export const useGameStore = create((set, get) => ({
     }
     set({ musicEnabled: next });
     get().saveToStorage();
-  },
-
-  loseLife: () => {
-    sound.playError();
-    const current = get().lives;
-    const next = Math.max(0, current - 1);
-    set({ lives: next, characterAnimation: 'error' });
-
-    setTimeout(() => {
-      if (get().lives > 0) {
-        set({ characterAnimation: 'idle' });
-      } else {
-        set({ activeScreen: 'game_over' });
-      }
-    }, 800);
   },
 
   reviveWithCoins: (cost = 50) => {
@@ -234,43 +403,68 @@ export const useGameStore = create((set, get) => ({
     get().saveToStorage();
   },
 
-  completePhase: (mapId, phaseNumber, reward = 100) => {
-    sound.playCorrect();
+  reorderClues: (mapId, reorderedClues) => {
     set(state => {
-      const currentMapProg = state.mapProgress[mapId] || { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] };
-      const isFinal = phaseNumber >= 7;
-      const nextMax = Math.max(currentMapProg.maxPhaseUnlocked, isFinal ? 7 : phaseNumber + 1);
-
+      const mapProg = state.mapProgress[mapId] || { maxPhaseUnlocked: 1, completed: false, cluesCollected: [] };
       return {
-        coins: state.coins + reward,
-        score: state.score + reward * 2,
-        characterAnimation: isFinal ? 'special' : 'success',
         mapProgress: {
           ...state.mapProgress,
           [mapId]: {
-            ...currentMapProg,
-            maxPhaseUnlocked: nextMax,
-            completed: isFinal ? true : currentMapProg.completed
+            ...mapProg,
+            cluesCollected: reorderedClues
           }
         }
       };
     });
+    get().saveToStorage();
+  },
+
+  completePhase: (mapId, phaseNumber, reward = 100) => {
+    sound.playCorrect();
+    const state = get();
+    const currentMapProg = state.mapProgress[mapId] || { maxPhaseUnlocked: 1, completed: false, cluesCollected: [], phaseScores: {} };
+    const isFinal = phaseNumber >= 7;
+    const nextMax = Math.max(currentMapProg.maxPhaseUnlocked, isFinal ? 7 : phaseNumber + 1);
+
+    const basePoints = reward * 2;
+    const lifeBonus = state.lives * 50;
+    const precisionBonus = 100;
+    const totalPhaseScore = basePoints + lifeBonus + precisionBonus;
+
+    const phaseScoreData = {
+      phaseNumber,
+      basePoints,
+      lifeBonus,
+      precisionBonus,
+      totalPhaseScore,
+      reward,
+      lives: state.lives,
+      isFinal
+    };
+
+    const updatedPhaseScores = {
+      ...(currentMapProg.phaseScores || {}),
+      [phaseNumber]: totalPhaseScore
+    };
+
+    set({
+      coins: state.coins + reward,
+      score: state.score + totalPhaseScore,
+      characterAnimation: isFinal ? 'special' : 'success',
+      lastPhaseScore: phaseScoreData,
+      showPhaseScoreModal: true,
+      mapProgress: {
+        ...state.mapProgress,
+        [mapId]: {
+          ...currentMapProg,
+          maxPhaseUnlocked: nextMax,
+          completed: isFinal ? true : currentMapProg.completed,
+          phaseScores: updatedPhaseScores
+        }
+      }
+    });
 
     get().saveToStorage();
-
-    if (phaseNumber >= 7) {
-      setTimeout(() => {
-        set({ activeScreen: 'victory' });
-      }, 1500);
-    } else {
-      setTimeout(() => {
-        set({
-          characterAnimation: 'idle',
-          currentPhaseIndex: phaseNumber,
-          activeScreen: 'game_phase'
-        });
-      }, 1400);
-    }
   },
 
   startPhase: (phaseIdx) => {
@@ -289,7 +483,7 @@ export const useGameStore = create((set, get) => ({
     const key = `${mapId}_${phaseNumber}`;
     const currentHints = get().hintsUsed[key] || 0;
 
-    if (hintLevel <= currentHints) return true; // already unlocked
+    if (hintLevel <= currentHints) return true;
 
     if (cost > 0) {
       const spent = get().spendCoins(cost);
@@ -307,10 +501,4 @@ export const useGameStore = create((set, get) => ({
     return true;
   },
   useHint: (...args) => get().unlockHint(...args),
-
-  resetGame: () => {
-    localStorage.removeItem(STORAGE_KEY);
-    const initial = getInitialState();
-    set(initial);
-  }
 }));

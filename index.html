@@ -2,13 +2,22 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/ui/compass.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#141c10" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CAÇA-TESOURO — A Grande Aventura dos Enigmas</title>
-    <meta name="description" content="Jogo interativo em React de Caça ao Tesouro com heróis de anime, mapas ancestrais, enigmas e baús lendários." />
+    <title>CAÇA-TESOURO — Desafio SeaWeb SENAI</title>
+    <meta name="description" content="Aplicação de Caça ao Tesouro com gamificação, geolocalização, inventário drag and drop e desafios para o SENAI Roberto Mange." />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

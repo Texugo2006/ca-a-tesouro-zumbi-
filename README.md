@@ -1,16 +1,331 @@
-# React + Vite
+# 🧟 CAÇA-TESOURO ZUMBI — Desafio SeaWeb SENAI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> Jogo educativo de caça ao tesouro com temática zumbi pós-apocalíptica, desenvolvido como projeto somativo da disciplina de Desenvolvimento Web do SENAI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📋 Sumário
 
-## React Compiler
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Como Funciona](#como-funciona)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Como Rodar o Projeto](#como-rodar-o-projeto)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Funcionalidades](#funcionalidades)
+- [Requisitos SENAI Atendidos](#requisitos-senai-atendidos)
+- [Créditos](#créditos)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 🎯 Sobre o Projeto
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+**Caça-Tesouro Zumbi** é um Progressive Web App (PWA) desenvolvido em React que simula uma missão de sobrevivência em um mundo pós-apocalíptico dominado por zumbis. O jogador escolhe seu personagem, seleciona uma zona de missão e enfrenta uma série de desafios (fases) para encontrar o tesouro escondido.
+
+O projeto foi desenvolvido para o **Desafio SeaWeb** do SENAI, atendendo a todos os requisitos técnicos da atividade somativa **5.01-FR-97 v.4**.
+
+**Professor responsável:** @marianyMorais  
+**Prazo de entrega:** 06/12/2026
+
+---
+
+## 🕹️ Como Funciona
+
+### Fluxo do Jogo
+
+```
+Tela Inicial (Home)
+     ↓
+Seleção de Personagem
+     ↓
+Seleção de Zona (Mapa)
+     ↓
+Fases do Mapa (1 a N fases por zona)
+     ↓
+Tesouro Encontrado! 🏆
+```
+
+### As 4 Zonas de Missão
+
+| Zona | Dificuldade | Ambiente |
+|------|-------------|----------|
+| 🏙️ Terminal Urbano Infectado | Iniciante | Distrito Central · Ruas Sob Quarentena |
+| 🌲 Bosque Contaminado | Intermediário | Mata Fechada · Pântano & Carcaças |
+| 🏥 Hospital de Quarentena | Avançado | Alas Isoladas · Necrotério & Subsolo |
+| 🪖 Bunker Militar Selado | Expert | Complexo Secreto · Laboratório Viral |
+
+### Tipos de Fases
+
+Cada zona contém fases de tipos variados:
+
+| Tipo | Descrição |
+|------|-----------|
+| `question` | Perguntas de múltipla escolha com personagem narrador |
+| `code` | Decifrando códigos secretos |
+| `memory` | Jogo da memória com símbolos |
+| `symbol_puzzle` | Quebra-cabeça de símbolos |
+| `path_choice` | Escolha de rota de fuga |
+| `wire_cutter` | Desarmamento de armadilha |
+| `coordinates` | Navegação por coordenadas |
+| `find_object` | Encontre o objeto escondido |
+| `difference` | Encontre as diferenças |
+| `final_riddle` | Charada final do tesouro |
+| `botanical_choice` | Identificação de plantas/recursos |
+| `triage` | Triagem médica de sobreviventes |
+| `frequency` | Decodificação de frequência de rádio |
+
+### Sistema de Pontuação
+
+- ✅ **Resposta correta:** +pontos base (varia por fase)
+- ⚡ **Bônus de velocidade:** +pontos extras por responder rápido
+- 💡 **Dica usada:** -50% dos pontos da fase
+- ❌ **Vida perdida:** ataque zumbi animado
+
+### Sistema de Vidas
+
+- O jogador começa com **3 vidas** (corações)
+- Erros e ataques zumbi custam vidas
+- Modo **Vidas Infinitas** disponível (toggle no HUD)
+- **Game Over** ao perder todas as vidas
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+| Tecnologia | Versão | Uso |
+|------------|--------|-----|
+| **React** | 18.x | Framework principal |
+| **Vite** | 8.3.0 | Build tool e dev server |
+| **Tailwind CSS** | 3.x | Estilização utilitária |
+| **Framer Motion** | 11.x | Animações e transições |
+| **Zustand** | 5.x | Gerenciamento de estado global |
+| **Lucide React** | latest | Ícones vetoriais |
+| **Service Worker** | — | Suporte offline (PWA) |
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+
+Antes de começar, você precisa ter instalado na sua máquina:
+
+- **Node.js** v18 ou superior → [nodejs.org](https://nodejs.org)
+- **npm** v9 ou superior (já vem com o Node.js)
+- **Git** → [git-scm.com](https://git-scm.com)
+
+### Passo a Passo
+
+#### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Texugo2006/ca-a-tesouro-zumbi-.git
+cd ca-a-tesouro-zumbi-
+```
+
+#### 2. Instale as dependências
+
+```bash
+npm install
+```
+
+> ⚠️ Aguarde o npm baixar todos os pacotes. Pode demorar alguns minutos na primeira vez.
+
+#### 3. Inicie o servidor de desenvolvimento
+
+```bash
+npm run dev
+```
+
+#### 4. Abra no navegador
+
+Acesse: **[http://localhost:5173](http://localhost:5173)**
+
+---
+
+### Scripts Disponíveis
+
+| Comando | O que faz |
+|---------|-----------|
+| `npm run dev` | Inicia o servidor de desenvolvimento com hot-reload |
+| `npm run build` | Gera a versão de produção na pasta `dist/` |
+| `npm run preview` | Visualiza o build de produção localmente |
+
+### Build para Produção
+
+```bash
+npm run build
+```
+
+Os arquivos de produção serão gerados em `dist/`. Para hospedar, basta servir essa pasta com qualquer servidor estático (Netlify, Vercel, GitHub Pages, etc.).
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+caca-tesouro/
+├── public/
+│   ├── manifest.json         # Manifesto PWA
+│   ├── sw.js                 # Service Worker (offline)
+│   └── assets/               # Imagens e recursos estáticos
+├── src/
+│   ├── animations/
+│   │   ├── particles.jsx     # Animação de partículas de fundo
+│   │   └── variants.js       # Variantes Framer Motion
+│   ├── components/
+│   │   ├── Character/        # Avatar SVG do personagem
+│   │   ├── CharacterCreator/ # Criador de personagem customizado
+│   │   ├── CharacterEditor/  # Editor de personagem
+│   │   ├── CharacterSelector/# Seletor de personagem na Home
+│   │   ├── Common/
+│   │   │   ├── GeolocationRadar.jsx  # Widget GPS
+│   │   │   ├── NetworkStatus.jsx     # Badge online/offline
+│   │   │   └── TacticalIcon.jsx      # Adaptador de ícones
+│   │   ├── DifficultySelector.jsx    # Seletor de dificuldade
+│   │   ├── GameHUD/          # HUD durante as fases (vidas, score, etc.)
+│   │   ├── GrandPrizeModal.jsx       # Modal do prêmio final
+│   │   ├── HintSystem/       # Sistema de dicas
+│   │   ├── Inventory/
+│   │   │   └── InventoryModal.jsx    # Inventário com drag & drop
+│   │   ├── LeaderboardModal.jsx      # Placar de líderes
+│   │   ├── Modals/           # Modais gerais
+│   │   ├── Phase/            # Componentes de cada tipo de fase
+│   │   │   ├── BotanicalChoicePhase.jsx
+│   │   │   ├── CodePhase.jsx
+│   │   │   ├── CoordinatesPhase.jsx
+│   │   │   ├── DifferencePhase.jsx
+│   │   │   ├── FinalRiddlePhase.jsx
+│   │   │   ├── FindObjectPhase.jsx
+│   │   │   ├── FrequencyPhase.jsx
+│   │   │   ├── MemoryPhase.jsx
+│   │   │   ├── PathChoicePhase.jsx
+│   │   │   ├── QuestionPhase.jsx
+│   │   │   ├── SymbolPuzzlePhase.jsx
+│   │   │   ├── TriagePhase.jsx
+│   │   │   └── WireCutterPhase.jsx
+│   │   ├── PhaseScoreModal.jsx       # Modal de pontuação pós-fase
+│   │   ├── TreasureChest/    # Animação do baú do tesouro
+│   │   ├── TreasureMap/      # Tela do mapa da zona
+│   │   ├── ZombieAttackModal.jsx     # Modal de ataque zumbi
+│   │   └── ZombieHorde/
+│   │       └── ZombieEncounter.jsx  # Mini-game de encontro com zumbi
+│   ├── data/
+│   │   ├── characters.js     # Dados dos personagens jogáveis
+│   │   ├── maps.js           # Dados das 4 zonas/mapas
+│   │   ├── operators.js      # Operadores matemáticos (CodePhase)
+│   │   ├── phases.js         # Definição de todas as fases
+│   │   └── questions.js      # Banco de perguntas de quiz
+│   ├── hooks/                # Custom React hooks
+│   ├── pages/
+│   │   ├── Home.jsx          # Tela inicial (seleção de zona/personagem)
+│   │   └── GamePhasePage.jsx # Tela de jogo em fase
+│   ├── services/
+│   │   └── soundEngine.js    # Motor de efeitos sonoros
+│   ├── store/
+│   │   └── useGameStore.js   # Store Zustand (estado global + persistência)
+│   ├── utils/
+│   │   └── difficultyAdapter.js # Adaptador de dificuldade por fase
+│   ├── App.jsx               # Componente raiz + roteamento de telas
+│   ├── index.css             # Estilos globais e Tailwind
+│   └── main.jsx              # Entry point React
+├── index.html                # HTML raiz (com registro do SW)
+├── package.json              # Dependências e scripts
+├── vite.config.js            # Configuração do Vite
+└── README.md                 # Este arquivo
+```
+
+---
+
+## ⚙️ Funcionalidades
+
+### 🎮 Gameplay
+- **4 zonas** com dificuldades progressivas
+- **13 tipos de fases** diferentes (quiz, memória, puzzle, etc.)
+- **Sistema de vidas** com eventos dramáticos de ataque zumbi
+- **Pontuação com bônus** de velocidade
+- **Inventário de pistas** com drag & drop para reordenar
+- **Sistema de dicas** com penalidade de pontos
+- **Modo Vidas Infinitas** para treino
+
+### 🏆 Progressão
+- **Salvamento automático** no localStorage (persiste ao fechar o browser)
+- **Continuar de onde parou** ao voltar ao jogo
+- **Novo Jogo** reseta todo o progresso
+- **Reset por Zona** reseta apenas a zona selecionada
+- **Placar de Líderes** com ranking local
+- **Prêmio Final** ao completar todas as 4 zonas
+
+### 👤 Personagem
+- **5 personagens** pré-definidos com lore próprio
+- **Editor de personagem** com customizações visuais
+- **Criador de personagem** do zero
+
+### 📱 PWA / Mobile
+- **Progressive Web App** — pode ser instalado como app
+- **Suporte offline** via Service Worker
+- **Responsivo** — funciona em mobile, tablet e desktop
+- **Badge de status de rede** (Online/Offline em tempo real)
+- **Radar de Geolocalização** via GPS do dispositivo
+
+### 🎯 Acessibilidade & UX
+- **Animações suaves** com Framer Motion
+- **Feedback visual e sonoro** em todas as ações
+- **Transições de tela** com efeito cinematográfico
+- **HUD** completo com vidas, pontos, moedas e progresso
+
+---
+
+## ✅ Requisitos SENAI Atendidos
+
+| Requisito | Implementação | Status |
+|-----------|---------------|--------|
+| Aplicação Web Responsiva | Tailwind CSS + breakpoints sm/md/lg | ✅ |
+| Componentes Reutilizáveis | +40 componentes React modulares | ✅ |
+| Gerenciamento de Estado | Zustand com persistência localStorage | ✅ |
+| Persistência de Dados | localStorage (caca_tesouro_save_v1) | ✅ |
+| PWA / Offline | manifest.json + sw.js Service Worker | ✅ |
+| Geolocalização | GeolocationRadar (navigator.geolocation) | ✅ |
+| Status de Rede | NetworkStatus (navigator.onLine + eventos) | ✅ |
+| Drag & Drop | InventoryModal com reordenação de pistas | ✅ |
+| Animações | Framer Motion em toda a aplicação | ✅ |
+| Múltiplos Tipos de Desafio | 13 tipos de fases diferentes | ✅ |
+| Sistema de Pontuação | Score + bônus velocidade + placar | ✅ |
+| Feedback ao Usuário | Modais, sons, animações de resposta | ✅ |
+| Código Limpo | Componentização, separação de responsabilidades | ✅ |
+
+---
+
+## 🐛 Solução de Problemas
+
+### "O jogo mostra as zonas como Concluída mas eu não joguei"
+Clique no botão **"Novo Jogo"** no cabeçalho. A página vai recarregar e resetar todo o progresso.
+
+### "O projeto não sobe com `npm run dev`"
+1. Verifique se o Node.js está instalado: `node -v`
+2. Delete a pasta `node_modules` e rode `npm install` novamente
+3. Verifique se a porta 5173 está livre
+
+### "O Service Worker não está funcionando"
+O SW só é registrado em `localhost` ou em conexões HTTPS. Para testar offline, use `npm run build` + `npm run preview`.
+
+---
+
+## 👥 Créditos
+
+| Papel | Responsável |
+|-------|-------------|
+| Desenvolvimento | Kaique Daniel |
+| Orientação / Avaliação | @marianyMorais |
+| Instituição | SENAI — Serviço Nacional de Aprendizagem Industrial |
+| Disciplina | Desenvolvimento Web — Projeto Somativo |
+| Entrega | 06/12/2026 |
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido exclusivamente para fins educacionais no contexto do SENAI.
+
+---
+
+> *"Na zona infectada, conhecimento é a única arma que não falha."* 🧟‍♂️🗺️

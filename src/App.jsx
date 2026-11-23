@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from './store/useGameStore';
 import { sound } from './services/soundEngine';
-import ParticleBackground from './animations/particles';
 
 // Modals
 import { HowToPlayModal, PauseModal, SettingsModal, GameOverModal } from './components/Modals';
+import GrandPrizeModal from './components/GrandPrizeModal';
+import LeaderboardModal from './components/LeaderboardModal';
+import ZombieAttackModal from './components/ZombieAttackModal';
 
 // Pages & Screens
 import Home from './pages/Home';
 import CharacterSelector from './components/CharacterSelector';
 import CharacterEditor from './components/CharacterEditor';
-import MapSelector from './components/MapSelector';
 import TreasureMap from './components/TreasureMap';
 import GamePhasePage from './pages/GamePhasePage';
 import TreasureChest from './components/TreasureChest';
+import ZombieEncounter from './components/ZombieHorde/ZombieEncounter';
 
 export default function App() {
   const {
@@ -25,7 +28,6 @@ export default function App() {
     soundEnabled
   } = useGameStore();
 
-  // Handle ambient music lifecycle
   useEffect(() => {
     sound.setSoundEnabled(soundEnabled);
     sound.setMusicEnabled(musicEnabled);
@@ -48,7 +50,7 @@ export default function App() {
             key="character_select"
             onSelect={(id) => {}}
             onCustomize={() => setActiveScreen('character_edit')}
-            onProceed={() => setActiveScreen('map_select')}
+            onProceed={() => setActiveScreen('home')}
           />
         );
 
@@ -56,27 +58,19 @@ export default function App() {
         return (
           <CharacterEditor
             key="character_edit"
-            onConfirm={() => setActiveScreen('character_select')}
-            onBack={() => setActiveScreen('character_select')}
+            onConfirm={() => setActiveScreen('home')}
+            onBack={() => setActiveScreen('home')}
           />
         );
 
-      case 'map_select':
-        return (
-          <MapSelector
-            key="map_select"
-            onSelectMap={() => setActiveScreen('map_overview')}
-            onBack={() => setActiveScreen('home')}
-            onEditCharacter={() => setActiveScreen('character_edit')}
-          />
-        );
+      // map_select screen removed — route chosen on Home
 
       case 'map_overview':
         return (
           <TreasureMap
             key="map_overview"
             onStartPhase={() => setActiveScreen('game_phase')}
-            onBackToMapSelect={() => setActiveScreen('map_select')}
+            onBackToMapSelect={() => setActiveScreen('home')}
           />
         );
 
@@ -87,7 +81,7 @@ export default function App() {
         return (
           <TreasureChest
             key="victory"
-            onReturnToMap={() => setActiveScreen('map_select')}
+            onReturnToMap={() => setActiveScreen('map_overview')}
             onReturnHome={() => setActiveScreen('home')}
           />
         );
@@ -98,19 +92,19 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#071A2F] text-[#F2E3C6] font-outfit overflow-x-hidden flex flex-col">
-      {/* Dynamic Themed Particle Background */}
-      <ParticleBackground theme={selectedMap || 'pirates'} count={35} />
-
-      {/* Main Content View with Transition */}
+    <div
+      className="relative min-h-screen w-full overflow-x-hidden flex flex-col"
+      style={{ background: '#0d1108', color: '#d4c9a8' }}
+    >
+      {/* Screen transitions */}
       <div className="relative z-10 flex-1 flex flex-col">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeScreen}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: 'easeOut' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="flex-1 flex flex-col"
           >
             {renderActiveScreen()}
@@ -118,11 +112,17 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* Persistent Global Modals */}
+      {/* Interactive Zombie Encounters on Home & Map */}
+      {(activeScreen === 'home' || activeScreen === 'map_overview') && <ZombieEncounter />}
+
+      {/* Global modals */}
       <HowToPlayModal />
       <PauseModal />
       <SettingsModal />
       <GameOverModal />
+      <GrandPrizeModal />
+      <LeaderboardModal />
+      <ZombieAttackModal />
     </div>
   );
 }
