@@ -1,10 +1,10 @@
-# 🧟 CAÇA-TESOURO ZUMBI — Desafio SeaWeb SENAI
+# CAÇA-TESOURO ZUMBI — Desafio SeaWeb SENAI
 
 > Jogo educativo de caça ao tesouro com temática zumbi pós-apocalíptica, desenvolvido como projeto somativo da disciplina de Desenvolvimento Web do SENAI.
 
 ---
 
-## 📋 Sumário
+## Sumário
 
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Como Funciona](#como-funciona)
@@ -16,7 +16,7 @@
 
 ---
 
-## 🎯 Sobre o Projeto
+## Sobre o Projeto
 
 **Caça-Tesouro Zumbi** é um Progressive Web App (PWA) desenvolvido em React que simula uma missão de sobrevivência em um mundo pós-apocalíptico dominado por zumbis. O jogador escolhe seu personagem, seleciona uma zona de missão e enfrenta uma série de desafios (fases) para encontrar o tesouro escondido.
 
@@ -27,7 +27,7 @@ O projeto foi desenvolvido para o **Desafio SeaWeb** do SENAI, atendendo a todos
 
 ---
 
-## 🕹️ Como Funciona
+## Como Funciona
 
 ### Fluxo do Jogo
 
@@ -40,17 +40,17 @@ Seleção de Zona (Mapa)
      ↓
 Fases do Mapa (1 a N fases por zona)
      ↓
-Tesouro Encontrado! 🏆
+Tesouro Encontrado!
 ```
 
 ### As 4 Zonas de Missão
 
 | Zona | Dificuldade | Ambiente |
 |------|-------------|----------|
-| 🏙️ Terminal Urbano Infectado | Iniciante | Distrito Central · Ruas Sob Quarentena |
-| 🌲 Bosque Contaminado | Intermediário | Mata Fechada · Pântano & Carcaças |
-| 🏥 Hospital de Quarentena | Avançado | Alas Isoladas · Necrotério & Subsolo |
-| 🪖 Bunker Militar Selado | Expert | Complexo Secreto · Laboratório Viral |
+| Terminal Urbano Infectado | Iniciante | Distrito Central · Ruas Sob Quarentena |
+| Bosque Contaminado | Intermediário | Mata Fechada · Pântano & Carcaças |
+| Hospital de Quarentena | Avançado | Alas Isoladas · Necrotério & Subsolo |
+| Bunker Militar Selado | Expert | Complexo Secreto · Laboratório Viral |
 
 ### Tipos de Fases
 
@@ -74,21 +74,21 @@ Cada zona contém fases de tipos variados:
 
 ### Sistema de Pontuação
 
-- ✅ **Resposta correta:** +pontos base (varia por fase)
-- ⚡ **Bônus de velocidade:** +pontos extras por responder rápido
-- 💡 **Dica usada:** -50% dos pontos da fase
-- ❌ **Vida perdida:** ataque zumbi animado
+- Resposta correta: +pontos base (varia por fase)
+- Bônus de velocidade: +pontos extras por responder rápido
+- Dica usada: -50% dos pontos da fase
+- Vida perdida: ataque zumbi animado
 
 ### Sistema de Vidas
 
-- O jogador começa com **3 vidas** (corações)
+- O jogador começa com **3 vidas**
 - Erros e ataques zumbi custam vidas
 - Modo **Vidas Infinitas** disponível (toggle no HUD)
 - **Game Over** ao perder todas as vidas
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 | Tecnologia | Versão | Uso |
 |------------|--------|-----|
@@ -102,7 +102,7 @@ Cada zona contém fases de tipos variados:
 
 ---
 
-## 🚀 Como Rodar o Projeto
+## Como Rodar o Projeto
 
 ### Pré-requisitos
 
@@ -127,8 +127,6 @@ cd ca-a-tesouro-zumbi-
 npm install
 ```
 
-> ⚠️ Aguarde o npm baixar todos os pacotes. Pode demorar alguns minutos na primeira vez.
-
 #### 3. Inicie o servidor de desenvolvimento
 
 ```bash
@@ -149,17 +147,9 @@ Acesse: **[http://localhost:5173](http://localhost:5173)**
 | `npm run build` | Gera a versão de produção na pasta `dist/` |
 | `npm run preview` | Visualiza o build de produção localmente |
 
-### Build para Produção
-
-```bash
-npm run build
-```
-
-Os arquivos de produção serão gerados em `dist/`. Para hospedar, basta servir essa pasta com qualquer servidor estático (Netlify, Vercel, GitHub Pages, etc.).
-
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 caca-tesouro/
@@ -235,46 +225,40 @@ caca-tesouro/
 
 ---
 
-## ⚙️ Funcionalidades
+## Funcionalidades
 
-### 🎮 Gameplay
-- **4 zonas** com dificuldades progressivas
-- **13 tipos de fases** diferentes (quiz, memória, puzzle, etc.)
-- **Sistema de vidas** com eventos dramáticos de ataque zumbi
-- **Pontuação com bônus** de velocidade
-- **Inventário de pistas** com drag & drop para reordenar
-- **Sistema de dicas** com penalidade de pontos
-- **Modo Vidas Infinitas** para treino
+### Gameplay
+- 4 zonas com dificuldades progressivas
+- 13 tipos de fases diferentes (quiz, memória, puzzle, etc.)
+- Sistema de vidas com eventos dramáticos de ataque zumbi
+- Pontuação com bônus de velocidade
+- Inventário de pistas com drag & drop para reordenar
+- Sistema de dicas com penalidade de pontos
+- Modo Vidas Infinitas para treino
 
-### 🏆 Progressão
-- **Salvamento automático** no localStorage (persiste ao fechar o browser)
-- **Continuar de onde parou** ao voltar ao jogo
-- **Novo Jogo** reseta todo o progresso
-- **Reset por Zona** reseta apenas a zona selecionada
-- **Placar de Líderes** com ranking local
-- **Prêmio Final** ao completar todas as 4 zonas
+### Progressão
+- Salvamento automático no localStorage (persiste ao fechar o browser)
+- Continuar de onde parou ao voltar ao jogo
+- Novo Jogo reseta todo o progresso
+- Reset por Zona reseta apenas a zona selecionada
+- Placar de Líderes com ranking local
+- Prêmio Final ao completar todas as 4 zonas
 
-### 👤 Personagem
-- **5 personagens** pré-definidos com lore próprio
-- **Editor de personagem** com customizações visuais
-- **Criador de personagem** do zero
+### Personagem
+- 5 personagens pré-definidos com lore próprio
+- Editor de personagem com customizações visuais
+- Criador de personagem do zero
 
-### 📱 PWA / Mobile
-- **Progressive Web App** — pode ser instalado como app
-- **Suporte offline** via Service Worker
-- **Responsivo** — funciona em mobile, tablet e desktop
-- **Badge de status de rede** (Online/Offline em tempo real)
-- **Radar de Geolocalização** via GPS do dispositivo
-
-### 🎯 Acessibilidade & UX
-- **Animações suaves** com Framer Motion
-- **Feedback visual e sonoro** em todas as ações
-- **Transições de tela** com efeito cinematográfico
-- **HUD** completo com vidas, pontos, moedas e progresso
+### PWA / Mobile
+- Progressive Web App — pode ser instalado como app
+- Suporte offline via Service Worker
+- Responsivo — funciona em mobile, tablet e desktop
+- Badge de status de rede (Online/Offline em tempo real)
+- Radar de Geolocalização via GPS do dispositivo
 
 ---
 
-## 👥 Créditos
+## Créditos
 
 | Papel | Responsável |
 |-------|-------------|
@@ -283,13 +267,3 @@ caca-tesouro/
 | Instituição | SENAI — Serviço Nacional de Aprendizagem Industrial |
 | Disciplina | Desenvolvimento Web — Projeto Somativo |
 | Entrega | 06/12/2026 |
-
----
-
-## 📄 Licença
-
-Este projeto foi desenvolvido exclusivamente para fins educacionais no contexto do SENAI.
-
----
-
-> *"Na zona infectada, conhecimento é a única arma que não falha."* 🧟‍♂️🗺️
