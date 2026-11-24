@@ -12,7 +12,6 @@
 - [Como Rodar o Projeto](#como-rodar-o-projeto)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Funcionalidades](#funcionalidades)
-- [Requisitos SENAI Atendidos](#requisitos-senai-atendidos)
 - [Créditos](#créditos)
 
 ---
@@ -272,41 +271,6 @@ caca-tesouro/
 - **Feedback visual e sonoro** em todas as ações
 - **Transições de tela** com efeito cinematográfico
 - **HUD** completo com vidas, pontos, moedas e progresso
-
----
-
-## ✅ Requisitos SENAI Atendidos
-
-| Requisito | Implementação | Status |
-|-----------|---------------|--------|
-| Aplicação Web Responsiva | Tailwind CSS + breakpoints sm/md/lg | ✅ |
-| Componentes Reutilizáveis | +40 componentes React modulares | ✅ |
-| Gerenciamento de Estado | Zustand com persistência localStorage | ✅ |
-| Persistência de Dados | localStorage (caca_tesouro_save_v1) | ✅ |
-| PWA / Offline | manifest.json + sw.js Service Worker | ✅ |
-| Geolocalização | GeolocationRadar (navigator.geolocation) | ✅ |
-| Status de Rede | NetworkStatus (navigator.onLine + eventos) | ✅ |
-| Drag & Drop | InventoryModal com reordenação de pistas | ✅ |
-| Animações | Framer Motion em toda a aplicação | ✅ |
-| Múltiplos Tipos de Desafio | 13 tipos de fases diferentes | ✅ |
-| Sistema de Pontuação | Score + bônus velocidade + placar | ✅ |
-| Feedback ao Usuário | Modais, sons, animações de resposta | ✅ |
-| Código Limpo | Componentização, separação de responsabilidades | ✅ |
-
----
-
-## 🐛 Solução de Problemas
-
-### "O jogo mostra as zonas como Concluída mas eu não joguei"
-Clique no botão **"Novo Jogo"** no cabeçalho. A página vai recarregar e resetar todo o progresso.
-
-### "O projeto não sobe com `npm run dev`"
-1. Verifique se o Node.js está instalado: `node -v`
-2. Delete a pasta `node_modules` e rode `npm install` novamente
-3. Verifique se a porta 5173 está livre
-
-### "O Service Worker não está funcionando"
-O SW só é registrado em `localhost` ou em conexões HTTPS. Para testar offline, use `npm run build` + `npm run preview`.
 
 ---
 
